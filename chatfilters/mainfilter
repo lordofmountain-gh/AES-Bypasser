@@ -27,3 +27,4 @@ local filter = {
     ["z"] = "ᴢ"
 }
 
+return filter
