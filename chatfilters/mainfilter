@@ -26,4 +26,4 @@ local filter = {
     ["y"] = "ʏ",
     ["z"] = "ᴢ"
 }
-return filter
+
