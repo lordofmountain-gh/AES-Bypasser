@@ -2,7 +2,7 @@ local textchatservice = game:GetService("TextChatService")
 local uis = cloneref(game:GetService("UserInputService"))
 local coregui = cloneref(game.CoreGui)
 local tweenservice = cloneref(game:GetService("TweenService"))
-
+--made by lordofmountain
 if textchatservice.ChatVersion == Enum.ChatVersion.LegacyChatService then
     setreadonly(task,false)
     local oldwait = task.wait
