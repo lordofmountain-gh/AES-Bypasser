@@ -84,7 +84,7 @@ if textchatservice.ChatVersion == Enum.ChatVersion.TextChatService then
         end
     end)
 
-    scrollingframe.Position = game:GetService("CoreGui").ExperienceChat.appLayout.Position + UDim2.new(0,0,0,125)
+    scrollingframe.Position = game:GetService("CoreGui").ExperienceChat.appLayout.Position + UDim2.new(0,0,0,150)
 
 elseif textchatservice.ChatVersion == Enum.ChatVersion.LegacyChatService then
     
