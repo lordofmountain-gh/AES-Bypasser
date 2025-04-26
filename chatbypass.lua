@@ -106,35 +106,70 @@ end
 
 notify(`To toggle the bypasser press {settings.key.Name}`,5)
 notify("press f3 to toggle the key and the toggling",5)
-uis.InputBegan:Connect(function(key)
 
-if key.KeyCode == settings.key then
-    if settings.bypasserturnedon == true then
-        settings.bypasserturnedon =false
-        notify('bypasser turned off',2)
+if uis:GetPlatform() == Enum.Platform.Windows then 
+
+    uis.InputBegan:Connect(function(key)
+
+        if key.KeyCode == settings.key then
+            
+            if uis:GetFocusedTextBox() == nil then
+            if settings.bypasserturnedon == true then
+                settings.bypasserturnedon =false
+                notify('bypasser turned off',2)
+                elseif settings.bypasserturnedon == false then
+                    settings.bypasserturnedon = true
+                    notify('bypassed turned on',2)
+                end
+            end
+            
+            elseif settings.isselectingkey == true then
+                if key.KeyCode ~= Enum.KeyCode.F3 then
+                settings.isselectingkey = false
+                settings.key = key.KeyCode
+                notify("selected key "..settings.key.Name,3)
+                end
+        
+            elseif key.KeyCode == Enum.KeyCode.F3 then
+                if settings.isselectingkey == false then
+                    settings.isselectingkey = true
+                    notify("now selecting key",2)
+                elseif settings.isselectingkey == true then
+                    settings.isselectingkey = false
+                    notify('turned off selecting key',2)
+                end
+            
+        end
+        
+        end)
+
+    else
+
+    local textbutton = Instance.new("TextButton",screengui)
+    textbutton.Size = UDim2.new(0, 50,0, 50)
+    textbutton.BorderSizePixel = 0
+    textbutton.Text = "Toggle"
+    textbutton.BackgroundColor3 = Color3.fromRGB(45,45,45)
+    textbutton.TextColor3 = Color3.fromRGB(255,255,255)
+    textbutton.Position = UDim2.new(0.34, 0,0.376, 0)
+
+    Instance.new("UICorner",textbutton)
+    Instance.new("UIDragDetector",textbutton)
+
+    textbutton.MouseButton1Down:Connect(function()
+        if settings.bypasserturnedon == true then
+            settings.bypasserturnedon =false
+            notify('bypasser turned off',2)
         elseif settings.bypasserturnedon == false then
             settings.bypasserturnedon = true
             notify('bypassed turned on',2)
         end
-    elseif settings.isselectingkey == true then
-        if key.KeyCode ~= Enum.KeyCode.F3 then
-        settings.isselectingkey = false
-        settings.key = key.KeyCode
-        notify("selected key "..settings.key.Name,3)
-        end
-        
-    elseif key.KeyCode == Enum.KeyCode.F3 then
-        if settings.isselectingkey == false then
-            settings.isselectingkey = true
-            notify("now selecting key",2)
-        elseif settings.isselectingkey == true then
-            settings.isselectingkey = false
-            notify('turned off selecting key',2)
-        end
-    
+    end)
+
 end
 
-end)
+
+
 
 task.spawn(function()
 while task.wait(150) do
