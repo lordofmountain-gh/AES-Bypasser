@@ -94,25 +94,23 @@ local function notify(str:string,time:number)
 end
 
 function replaceletters(str:string)
-local word = str
-local finalword =""
-local split = string.split(word," ")
+    local finalword = ""
+    local split = string.split(str," ")
 
-for _,words in split do
-local firstalphabet = string.lower(words:sub(1,1))
+    for _,words in split do
+        local firstalphabet = string.lower(words:sub(1,1))
 
-for normal,replaced in filter do
-if firstalphabet == normal then
-firstalphabet = string.gsub(firstalphabet,normal,replaced)
-end
+        for normal,replaced in filter do
+            if firstalphabet == normal  then
+                words = string.gsub(words,firstalphabet,replaced)
+            end
+        end
 
-if replaced == firstalphabet then
-words = string.gsub(string.lower(words),normal,replaced)
-end
-end
-finalword = finalword.." "..words
-end
-str = finalword
+        finalword = finalword.." "..words
+
+    end
+    str = finalword
+    
     return str
 end
 
