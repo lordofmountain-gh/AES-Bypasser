@@ -2,7 +2,7 @@ local textchatservice = game:GetService("TextChatService")
 local uis = cloneref(game:GetService("UserInputService"))
 local coregui = cloneref(game.CoreGui)
 local tweenservice = cloneref(game:GetService("TweenService"))
---made by lordofmountain
+
 if textchatservice.ChatVersion == Enum.ChatVersion.LegacyChatService then
     setreadonly(task,false)
     local oldwait = task.wait
@@ -20,6 +20,43 @@ local settings = {
     key = Enum.KeyCode.F2,
     isselectingkey=false,
 }
+
+local function mk(i)
+    local gui = i
+
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+    local function update(input)
+        local delta = input.Position - dragStart
+        gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = gui.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    uis.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+end
+
 
 local screengui = Instance.new("ScreenGui",coregui)
 screengui.ResetOnSpawn = false
@@ -57,11 +94,25 @@ local function notify(str:string,time:number)
 end
 
 function replaceletters(str:string)
+local word = str
+local finalword =""
+local split = string.split(word," ")
 
-    for normal,replace in filter do
-        str= string.gsub(string.lower(str),normal,replace)
-    end 
+for _,words in split do
+local firstalphabet = string.lower(words:sub(1,1))
 
+for normal,replaced in filter do
+if firstalphabet == normal then
+firstalphabet = string.gsub(firstalphabet,normal,replaced)
+end
+
+if replaced == firstalphabet then
+words = string.gsub(string.lower(words),normal,replaced)
+end
+end
+finalword = finalword.." "..words
+end
+str = finalword
     return str
 end
 
@@ -152,9 +203,8 @@ if uis:GetPlatform() == Enum.Platform.Windows then
     textbutton.BackgroundColor3 = Color3.fromRGB(45,45,45)
     textbutton.TextColor3 = Color3.fromRGB(255,255,255)
     textbutton.Position = UDim2.new(0.34, 0,0.376, 0)
-
+    mk(textbutton)
     Instance.new("UICorner",textbutton)
-    Instance.new("UIDragDetector",textbutton)
 
     textbutton.MouseButton1Down:Connect(function()
         if settings.bypasserturnedon == true then
